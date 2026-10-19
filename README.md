@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/summary.png" alt="PurpleAir heat and smoke alerts project summary" width="100%">
+  <img src="docs/summary.png" alt="PurpleAir heat and smoke alerts project summary" width="800">
 </p>
 # PurpleAir Heat + Wildfire Smoke Alerts
 
