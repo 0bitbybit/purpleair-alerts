@@ -1,6 +1,6 @@
 # PurpleAir Heat + Wildfire Smoke Alerts
 
-[![Tests](https://github.com/OWNER/purpleair-alerts/actions/workflows/tests.yml/badge.svg)](https://github.com/OWNER/purpleair-alerts/actions/workflows/tests.yml)
+[![Tests](https://github.com/0bitbybit/purpleair-alerts/actions/workflows/tests.yml/badge.svg)](https://github.com/0bitbybit/purpleair-alerts/actions/workflows/tests.yml)
 
 Email and text-message alerts for outdoor heat and wildfire smoke, built from
 low-cost PurpleAir sensors, a few hundred lines of Python, and free open-source tooling.
