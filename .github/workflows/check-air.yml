@@ -1,0 +1,67 @@
+# Replaces the Power Automate "Recurrence" trigger: runs the checker every 15 minutes.
+name: Check air quality and heat
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"   # UTC; GitHub may start scheduled runs a few minutes late
+  workflow_dispatch:          # "Run workflow" button for manual tests
+    inputs:
+      test_notify:
+        description: "Only send a test email/SMS"
+        type: boolean
+        default: false
+
+concurrency:
+  group: check-air
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      # Alert state (current level per sensor/hazard) is carried between runs in the
+      # Actions cache, so you get one alert per change instead of one every 15 minutes.
+      - name: Restore alert state
+        uses: actions/cache/restore@v4
+        with:
+          path: state.json
+          key: alert-state-${{ github.run_id }}
+          restore-keys: alert-state-
+
+      # Optional: keep real sensor indices out of a public repo by storing the whole
+      # config in a CONFIG_YAML secret. If the secret is empty, the committed config.yaml is used.
+      - name: Write config from secret (optional)
+        env:
+          CONFIG_YAML: ${{ secrets.CONFIG_YAML }}
+        run: |
+          if [ -n "$CONFIG_YAML" ]; then printf '%s\n' "$CONFIG_YAML" > config.yaml; fi
+          test -f config.yaml || { echo "::error::No config.yaml and no CONFIG_YAML secret"; exit 1; }
+
+      - name: Run checker
+        env:
+          PURPLEAIR_API_KEY: ${{ secrets.PURPLEAIR_API_KEY }}
+          EMAIL_URLS: ${{ secrets.EMAIL_URLS }}
+          SMS_URLS: ${{ secrets.SMS_URLS }}
+        run: |
+          if [ "${{ inputs.test_notify }}" = "true" ]; then
+            python -m aqalert --test-notify
+          else
+            python -m aqalert --config config.yaml --state state.json
+          fi
+
+      - name: Save alert state
+        if: always() && hashFiles('state.json') != ''
+        uses: actions/cache/save@v4
+        with:
+          path: state.json
+          key: alert-state-${{ github.run_id }}

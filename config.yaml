@@ -1,0 +1,46 @@
+# Copy to config.yaml and edit. Secrets (API key, email/SMS URLs) do NOT go here —
+# they come from environment variables / GitHub Actions secrets.
+
+site_name: "W.L.A. Air"
+timezone: "America/Los_Angeles"
+
+sensors:
+  - index: 253411                 # PurpleAir sensor index (from the map URL ?select=...)
+    label: "Getti (outdoor)"
+
+# Treat a sensor as offline if it hasn't reported in this long.
+stale_after_minutes: 30
+
+heat:
+  # "temperature" matches how Cal/OSHA §3395 (outdoor) triggers are written.
+  # "heat_index" uses the NWS heat index instead.
+  metric: temperature
+  # PurpleAir measures inside the housing: temperature reads ~8 °F high and
+  # humidity ~4 % low. These are PurpleAir's published average offsets.
+  temperature_offset_f: -8
+  humidity_offset: 4
+  deadband: 2          # °F the reading must fall below a threshold to step down
+  reminder_hours: 4
+  levels:
+    - name: "Heat illness prevention"
+      at: 80
+      action: "Shade up, water available, encourage preventative cool-down rest."
+    - name: "High heat procedures"
+      at: 95
+      action: "High-heat procedures: observation, pre-shift reminders, mandatory rest breaks."
+
+smoke:
+  deadband: 5          # AQI points
+  reminder_hours: 4
+  levels:
+    - name: "Unhealthy for Sensitive Groups"
+      at: 101
+      action: "Notify sensitive employees; consider reducing strenuous outdoor work."
+    - name: "Wildfire smoke rule trigger"
+      at: 151
+      action: "Cal/OSHA §5141.1: communicate, reduce exposure, provide N95s for voluntary use."
+    - name: "Respirators required"
+      at: 501
+      action: "Cal/OSHA §5141.1: respirator use required under a §5144 program."
+
+# Verify the actions above against your own written programs — they are examples.

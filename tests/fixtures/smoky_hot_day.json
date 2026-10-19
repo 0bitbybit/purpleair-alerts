@@ -1,0 +1,4 @@
+[
+  {"sensor_index": 123456, "sensor": {"name": "Dock", "last_seen": 0, "temperature": 104, "humidity": 18, "pm2.5_cf_1_a": 95.0, "pm2.5_cf_1_b": 99.0}},
+  {"sensor_index": 654321, "sensor": {"name": "Yard", "last_seen": 0, "temperature": 86, "humidity": 30, "pm2.5_cf_1_a": 12.0, "pm2.5_cf_1_b": 80.0}}
+]
