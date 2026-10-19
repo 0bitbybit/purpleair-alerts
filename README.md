@@ -1,3 +1,6 @@
+<p align="center">
+  <img src="docs/summary.png" alt="PurpleAir heat and smoke alerts project summary" width="100%">
+</p>
 # PurpleAir Heat + Wildfire Smoke Alerts
 
 [![Tests](https://github.com/0bitbybit/purpleair-alerts/actions/workflows/tests.yml/badge.svg)](https://github.com/0bitbybit/purpleair-alerts/actions/workflows/tests.yml)
